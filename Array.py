@@ -15,6 +15,7 @@ class Solution:
         result = ""
         for i in range(len(s)):
             result = max(self.palindrome(s, i, i), self.palindrome(s, i, i+1), result, key=len)
+        return result
     
     # 在 s 中寻找以 s[l] 和 s[r] 为中心的最长回文串    # return result
     def palindrome(self, s, left, right):
