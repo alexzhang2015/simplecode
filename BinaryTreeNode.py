@@ -68,6 +68,17 @@ class Solution:
             
         return min(left_depth, right_depth) + 1
 
+    # https://leetcode.cn/problems/symmetric-tree/?envType=study-plan-v2&envId=top-100-liked
+    # 核心是递归比较：(p.left, q.right) & (p.right, q.left)
+    def isSymmetric(self, root: Optional[TreeNode]) -> bool:
+        if not root: return True
+        return self._isSymmetric(root.left, root.right)
+        
+    def _isSymmetric(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        if p is None or q is None:
+            return p is q
+        return p.val == q.val and self._isSymmetric(p.left, q.right) and self._isSymmetric(p.right, q.left)
+    
     # https://leetcode.cn/problems/invert-binary-tree/
     # 二叉树反转，指针赋值+递归
     def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
@@ -123,17 +134,62 @@ class Solution:
         self.traverse(node1.right, node2.left)    
         
     # https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-inorder-traversal/solutions/2361558/105-cong-qian-xu-yu-zhong-xu-bian-li-xu-4lvkz/
-    def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode:
-        def recur(root, left, right):
-            if left > right: return                               # 递归终止
-            node = TreeNode(preorder[root])                       # 建立根节点
-            i = dic[preorder[root]]                               # 划分根节点、左子树、右子树
-            node.left = recur(root + 1, left, i - 1)              # 开启左子树递归
-            node.right = recur(i - left + root + 1, i + 1, right) # 开启右子树递归
-            return node                                           # 回溯返回根节点
+    # 重点：1.递归函数的构建，拆解前序遍历preorder，前序遍历自左向右，对应递归遍历的中序遍历 root > 坐子树 > 右子树，反过来通过后续遍历来递归中序遍历的顺序 root > 右子树 > 左子树
+    def buildTreePI(self, preorder: List[int], inorder: List[int]) -> TreeNode:
+        dic = {val: i for i, val in enumerate(inorder)}
+        preorder_index = 0
 
-        dic, preorder = {}, preorder
-        for i in range(len(inorder)):
-            dic[inorder[i]] = i
-        return recur(0, 0, len(inorder) - 1)
+        def recur(left, right):
+            nonlocal preorder_index
+            print(preorder_index, left, right)
+            if left > right:
+                return None
+            node = TreeNode(preorder[preorder_index])
+            preorder_index += 1
+            i = dic[node.val]
+            node.left = recur(left, i - 1)
+            node.right = recur(i + 1, right)
+            return node
 
+        return recur(0, len(inorder) - 1)
+
+        # https://leetcode.cn/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+    def buildTreeIP(self, inorder: List[int], postorder: List[int]) -> Optional[TreeNode]:
+        def recur(left, right):
+            if left > right:
+                return None
+            node = TreeNode(postorder.pop())
+            i = dic[node.val]
+            node.right = recur(i + 1, right)
+            node.left = recur(left, i - 1)
+            return node
+
+        dic = {val: i for i, val in enumerate(inorder)}
+        return recur(0, len(inorder) - 1)
+    
+    # https://pic.leetcode-cn.com/1620738102-ziVjrO-889.png
+    # https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-postorder-traversal/description/
+    def constructFromPrePost(self, preorder: List[int], postorder: List[int]) -> Optional[TreeNode]:
+        if not preorder or not postorder:
+            return None
+        print(preorder, postorder)
+        # 1. 以postorder视角推导preorder，寻找根节点
+        dic = {val: i for i, val in enumerate(preorder)}
+        node = TreeNode(postorder[-1])
+        # 2. 如果postorder的长度是1，直接返回node即可
+        if len(postorder) == 1:
+            return node
+        # 3. 寻找preorder右子树的位置
+        i = dic[postorder[-2]]
+        # 4. 构建左右子树递归表达，返回根节点
+        # 注意：前序遍历的左子树和后序遍历的右子树对应，前序遍历的右子树和后序遍历的左子树对应
+        node.left = self.constructFromPrePost(preorder[1:i], postorder[0:i-1])
+        node.right = self.constructFromPrePost(preorder[i:], postorder[i-1:-1])
+        
+        return node
+        
+
+
+solution = Solution()
+solution.buildTreePI([3,9,20,15,7], [9,3,15,20,7])
+solution.constructFromPrePost([1,2,4,5,3,6,7], [4,5,2,6,7,3,1])
