@@ -193,9 +193,74 @@ class Solution:
         p1.next = dummy2.next
 
         return dummy1.next
-                
-            
+    
+    # https://leetcode.cn/problems/remove-nth-node-from-end-of-list/
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        if not head:
+            return None
+        
+        p1, p2 = head, head
+        length = 0
+        
+        while p1:
+            p1 = p1.next
+            length += 1
+        
+        if n == length:
+            return head.next
+        
+        for _ in range(length - n -1):
+            p2 = p2.next
+        if p2:
+            p2.next = p2.next.next
+        return head
+    
+    # https://leetcode.cn/problems/reverse-linked-list/
+    # 链表反转，queue LIFO (Last In First Out) 
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head:
+            return None
+        
+        p1, p2 = head, head
+        queue = []
+        while p1:
+            queue.append(p1.val)
+            p1 = p1.next
+        
+        while queue:
+            p2.val = queue.pop()
+            p2 = p2.next
+        return head    
+    
+    # https://leetcode.cn/problems/remove-duplicates-from-sorted-list/
+    def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head:
+            return None
+        
+        p = head
+        while p and p.next:
+            if p.val == p.next.val:
+                p.next = p.next.next
+            else:
+                p = p.next
+        
+        return head
+    
+
+
+linked_list = LinkedList()
+linked_list.head = ListNode(1) 
+n1 = ListNode(2)
+n2 = ListNode(3)
+n3 = ListNode(4)
+n4 = ListNode(5)
+
+linked_list.head.next = n1
+n1.next = n2
+n2.next = n3
+n3.next = n4
                 
 solution = Solution()
 print(solution.merge([0], 0, [1], 1))
-        
+solution.removeNthFromEnd(linked_list.head, 2)        
+linked_list.traverse()
