@@ -136,7 +136,47 @@ class Solution:
         # for i in range(k):
         #     nums.insert(0, nums.pop())
         
-
+        
+    # https://leetcode.cn/problems/group-anagrams/?envType=study-plan-v2&envId=top-100-liked
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        dic = {}
+        for s in strs:
+            sortedStr = ''.join(sorted(s)) # 排序字符串
+            if sortedStr in dic:
+                dic[sortedStr].append(s)
+            else:
+                dic[sortedStr] = [s]
+        
+        return list(dic.values())
+        
+    # https://leetcode.cn/problems/3sum
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        # dic = {num: i for i, num in enumerate(nums)}
+        # 对nums进行排序，便于后续的双指针遍历
+        nums.sort()
+        res = []
+        for i in range(len(nums)):
+            l = i+1
+            r = len(nums)-1
+            while l < r:
+                if nums[i] + nums[l] + nums[r] == 0:
+                    res.append([nums[i], nums[l], nums[r]])
+                    l += 1
+                    r -= 1
+                elif nums[i] + nums[l] + nums[r] < 0:
+                    l += 1
+                else:
+                    r -= 1
+        # 规避[[0,0,0],[0,0,0]]结果，去重
+        res_dict = {}
+        for item in res:
+            res_dict[tuple(item)] = None
+        res = list(res_dict.keys())
+        
+        return res
+            
+        
+        
 
 solution = Solution()
 solution.removeDuplicates([1,1,1,2])
@@ -144,3 +184,4 @@ print(solution.longestPalindrome("bdabad"))
 print(solution.twoSum([2,7,11,15], 9))
 print(solution.removeElement([0,1,2,2,3,0,4,2], 2))
 print(solution.merge([[1,3],[2,6],[8,10],[15,18]]))
+print(solution.threeSum([-2,0,1,1,2]))

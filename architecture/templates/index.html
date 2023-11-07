@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<div id="messages"></div>
+<script>
+  // Create a new EventSource object to receive server-sent events
+  var eventSource = new EventSource("/stream");
+  
+  // Add an event listener for the "message" event
+  eventSource.addEventListener("message", function(event) {
+    // Append the received data to the "messages" div
+    document.getElementById("messages").innerHTML += ' ' + event.data;
+  });
+</script>
+</body>
+</html>

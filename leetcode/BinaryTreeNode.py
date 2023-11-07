@@ -68,6 +68,19 @@ class Solution:
             
         return min(left_depth, right_depth) + 1
 
+    def inorder(self, node: Optional[TreeNode], ino: []):
+        if node:
+            self.inorder(node.left, ino)
+            ino.append(node.val)
+            self.inorder(node.right, ino)
+    # https://leetcode.cn/problems/binary-tree-inorder-traversal/?envType=study-plan-v2&envId=top-100-liked
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        if not root: return []
+        ino = []
+        self.inorder(root, ino)
+        return ino
+        
+
     # https://leetcode.cn/problems/symmetric-tree/?envType=study-plan-v2&envId=top-100-liked
     # 核心是递归比较：(p.left, q.right) & (p.right, q.left)
     def isSymmetric(self, root: Optional[TreeNode]) -> bool:
@@ -193,3 +206,4 @@ class Solution:
 solution = Solution()
 solution.buildTreePI([3,9,20,15,7], [9,3,15,20,7])
 solution.constructFromPrePost([1,2,4,5,3,6,7], [4,5,2,6,7,3,1])
+print(solution.inorderTraversal(root))
