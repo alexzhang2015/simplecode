@@ -2,5 +2,14 @@
     "editor.fontSize": 15,
     "window.zoomLevel": 1,
     "editor.wordWrap": "on",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./leetcode",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true,
     // "editor.renderWhitespace": "all"
 }
