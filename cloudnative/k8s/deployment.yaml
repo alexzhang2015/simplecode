@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-http-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: python-http
+  template:
+    metadata:
+      labels:
+        app: python-http 
+    spec:
+      containers:
+      - name: python-http
+        image: python:3.9
+        ports:
+        - containerPort: 5000
+        env:
+        - name: APP_ENV
+          value: production
+        command: ["python", "-m", "http.server", "5000" ]
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+          limits:
+            cpu: "200m"
+            memory: "200Mi"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
