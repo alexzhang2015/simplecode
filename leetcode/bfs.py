@@ -36,7 +36,7 @@ class Solution:
             if node.right:
                 queue.append((depth + 1, node.right))
 
-    # DFS，需要把所有的叶子节点的深度进行比较，才可以得到最终的最小深度。
+    # DFS（深度优先搜索），需要把所有的叶子节点的深度进行比较，才可以得到最终的最小深度。
     def minDepth(self, root: TreeNode) -> int:
         if not root: return 0
         stack = [(1, root)]

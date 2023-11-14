@@ -201,6 +201,21 @@ class Solution:
         
         return node
         
+    # https://leetcode.cn/problems/diameter-of-binary-tree/?envType=study-plan-v2&envId=top-100-liked
+def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+    # Helper function to calculate the height and diameter of a binary tree
+    def height_and_diameter(node):
+        if node is None:
+            return 0, 0
+        left_height, left_diameter = height_and_diameter(node.left)
+        right_height, right_diameter = height_and_diameter(node.right)
+        height = max(left_height, right_height) + 1
+        diameter = max(left_height + right_height, left_diameter, right_diameter)
+        return height, diameter
+
+    _, diameter = height_and_diameter(root)
+    return diameter
+
 
 
 solution = Solution()
